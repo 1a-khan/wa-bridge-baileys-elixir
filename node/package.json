@@ -1,0 +1,9 @@
+{
+  "name": "wa-bridge-baileys",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@whiskeysockets/baileys": "^7.0.0-rc.9",
+    "pino": "^9.0.0"
+  }
+}

@@ -1,0 +1,10 @@
+services:
+  wa-bridge:
+    build: .
+    ports:
+      - "4001:4001"
+    environment:
+      - PORT=4001
+    volumes:
+      - ./node/baileys_auth:/app/node/baileys_auth
+    restart: unless-stopped

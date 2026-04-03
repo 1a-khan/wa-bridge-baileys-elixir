@@ -1,0 +1,6 @@
+_build
+deps
+node/node_modules
+node/baileys_auth
+.git
+*.log
