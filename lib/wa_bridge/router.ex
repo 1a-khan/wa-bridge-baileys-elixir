@@ -18,6 +18,11 @@ defmodule WaBridge.Router do
     send_resp(conn, 200, Jason.encode!(status))
   end
 
+  get "/health" do
+    Logger.info("GET /health")
+    send_resp(conn, 200, Jason.encode!(%{status: "ok"}))
+  end
+
   get "/qr" do
     Logger.info("GET /qr")
     WaBridge.Baileys.ensure_started()

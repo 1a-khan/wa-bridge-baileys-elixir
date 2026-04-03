@@ -1,21 +1,58 @@
-# WaBridge
+# WaBridge (Baileys + Elixir API)
 
-**TODO: Add description**
+Outbound-only WhatsApp bridge powered by Baileys (Node.js) with a lightweight Elixir HTTP API.
 
-## Installation
+## What This Does
+- Generates a WhatsApp QR for pairing
+- Saves session credentials
+- Provides HTTP endpoints to send outbound messages
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `wa_bridge` to your list of dependencies in `mix.exs`:
+## Requirements
+- Elixir 1.17+
+- Node.js 18+ (for Baileys)
 
-```elixir
-def deps do
-  [
-    {:wa_bridge, "~> 0.1.0"}
-  ]
-end
+## Local Run
+```bash
+cd node
+npm install
+
+cd ..
+mix run --no-halt
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/wa_bridge>.
+The server listens on `PORT` (default `4001`).
 
+## Endpoints
+- `GET /health` → `{ "status": "ok" }`
+- `GET /status` → current pairing state
+- `GET /qr` → QR string (JSON)
+- `GET /qr.png` → QR image (640x640 PNG)
+- `POST /send` → send message
+
+### Send Message Example
+```bash
+curl -s -X POST http://localhost:4001/send \
+  -H 'content-type: application/json' \
+  -d '{"to":"+491234567890","message":"hello"}'
+```
+
+## Pairing Flow
+1. Start server: `mix run --no-halt`
+2. Request QR: `GET /qr.png`
+3. Scan QR with WhatsApp
+4. Check pairing: `GET /status` → `paired: true`
+
+Session creds are stored in `node/baileys_auth`.
+
+## Docker / Coolify
+Build & run:
+```bash
+docker build -t wa-bridge .
+docker run -p 4001:4001 -e PORT=4001 wa-bridge
+```
+
+Or use the included `docker-compose.yml` in Coolify.
+
+## Notes
+- QR is generated only when you request `/qr` or `/qr.png`.
+- If pairing fails, delete `node/baileys_auth/*` and try again.
